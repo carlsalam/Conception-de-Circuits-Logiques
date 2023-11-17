@@ -1,3 +1,0 @@
-C:/Users/csala/OneDrive/Documents/GitHub/TP2-Gr02-EquipeC/cmake-build-debug/CMakeFiles/TP2_Gr02_EquipeC.dir
-C:/Users/csala/OneDrive/Documents/GitHub/TP2-Gr02-EquipeC/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/csala/OneDrive/Documents/GitHub/TP2-Gr02-EquipeC/cmake-build-debug/CMakeFiles/rebuild_cache.dir
