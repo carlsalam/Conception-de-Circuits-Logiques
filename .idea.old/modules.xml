@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TP2-Gr02-EquipeC.iml" filepath="$PROJECT_DIR$/.idea/TP2-Gr02-EquipeC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fichiers_fournis.iml" filepath="$PROJECT_DIR$/.idea/fichiers_fournis.iml" />
     </modules>
   </component>
 </project>
