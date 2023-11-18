@@ -50,8 +50,22 @@ void t_entree_destroy(t_entree *entree)
 
         free(entree); //Libérer la mémoire de l'enregistrement
     }
-
-
-
-
+    /*else
+    {
+        return NULL;                a voir
+    }*/
 }
+
+t_pin_sortie *t_entree_get_pin(t_entree *entree)
+{
+    //si l'allocation de l'espace n'a pas fonctionne
+    if(entree == NULL)
+    {
+        return NULL;
+    }
+    else    //on retourne le pointeur de la pin_sortie de l'entree
+    {
+        return entree->pin;
+    }
+}
+
