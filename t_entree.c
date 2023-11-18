@@ -37,3 +37,21 @@ t_entree *t_entree_init(int num)
 
     return nouvelle_entree;
 }
+
+
+void t_entree_destroy(t_entree *entree)
+{
+    //Si l'allocation de l'espace à fonctionné
+    if(entree != NULL )
+    {
+        free(entree -> nom);  //Libérer la mémoire du nom
+
+        t_pin_sortie_destroy(entree -> pin); //Détruire la pin_sortie de l'entrée
+
+        free(entree); //Libérer la mémoire de l'enregistrement
+    }
+
+
+
+
+}
