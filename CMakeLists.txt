@@ -19,4 +19,8 @@ add_executable(TP2_Gr02_EquipeC
         t_pin_sortie.h
         t_porte.h
         t_sortie.h
-        main.c)
+        main.c
+        t_entree.c
+        t_sortie.c
+        t_porte.c
+        t_circuit.c)
