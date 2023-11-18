@@ -6,6 +6,8 @@
 
 #include "t_entree.h"
 
+
+
 t_entree *t_entree_init(int num)
 {
     t_entree* nouvel_entree = NULL;
@@ -19,22 +21,19 @@ t_entree *t_entree_init(int num)
     nouvel_entree->id = num;
 
 
+    char entree[12];
+    sprintf(entree, "E%d", num);
 
-
-    char entree[10];
-    sprintf(entree, "%d", num);
-
-    nouvel_entree->nom = (char *) malloc(strlen(entree));
+    nouvel_entree->nom = (char *) malloc(strlen(entree) + 1);
 
     if(nouvel_entree->nom == NULL)
     {
         free(nouvel_entree);
         return NULL;
     }
+    strcpy(nouvel_entree->nom, entree);
 
-    strcpy(nouvel_entree->nom, "E");
-    strcat(nouvel_entree->nom, entree);
-
+    nouvel_entree->pin = NULL;
 
     return nouvel_entree;
 }
