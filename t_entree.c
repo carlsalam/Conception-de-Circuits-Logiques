@@ -83,3 +83,51 @@ int t_entree_est_reliee(t_entree *entree)
 
 }
 
+
+void t_entree_reset(t_entree *entree)
+{
+    //Pointeur entree = nul : rien faire
+    if(entree == NULL)
+    {
+        return;
+    }
+
+    //Pointeur entree pas nul : réinitialiser le pin
+    if(entree -> pin != NULL)
+    {
+        t_pin_sortie_reset(entree -> pin);
+    }
+}
+
+
+int t_entree_propager_signal(t_entree *entree)
+{
+    //Propagation impossible si l'entrée est NULL ou si pin_sortie n'est pas définie
+    if(entree == NULL || entree -> pin == NULL)
+    {
+        return 0;
+    }
+
+    if(t_pin_sortie_get_valeur(entree -> pin) != -1)
+    {
+        //Propager le signal quand la pin_sortie a une valeur
+        t_pin_sortie_propager_signal(entree -> pin);
+        return 1;
+    } else
+    {
+        return 0;
+    }
+}
+
+
+int t_entree_get_valeur(t_entree *entree)
+{
+    if(entree == NULL || entree -> pin == NULL)
+    {
+        //Entrée est NULL ou pin_sortie pas définie = retourne -1
+        return -1;
+    }
+
+    //Aussi non retourne la valeur du signal de pin_sortie
+    return t_pin_sortie_get_valeur(entree -> pin);
+}
