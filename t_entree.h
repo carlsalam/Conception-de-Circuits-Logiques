@@ -17,7 +17,7 @@ Dernière modification: 2018-03-19
 
 typedef struct t_pin_sortie t_pin_sortie;
 
-struct t_entree{                                                        //comentairevmdkl;vmdsklvmd
+struct t_entree{
 	int id; //Identifiant numérique de l'entrée
 			//doit être unique parmi les entrées 
 			//du circuit
