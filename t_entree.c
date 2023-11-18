@@ -69,3 +69,17 @@ t_pin_sortie *t_entree_get_pin(t_entree *entree)
     }
 }
 
+
+int t_entree_est_reliee(t_entree *entree)
+{
+    if (entree == NULL || entree->pin == NULL)
+    {
+        //Quand entrée NULL ou pin_sortie NULL == pas reliéa
+        return 0;
+    }
+
+    //Retour vrai aussi non
+    return t_pin_sortie_est_reliee(entree->pin);
+
+}
+
