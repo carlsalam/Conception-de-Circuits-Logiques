@@ -11,6 +11,7 @@ Dernière modification: 2018-03-19
 #define SORTIE_H_
 
 #include "t_pin_entree.h"
+#include <stdlib.h>
 
 typedef struct t_pin_entree t_pin_entree;
 
