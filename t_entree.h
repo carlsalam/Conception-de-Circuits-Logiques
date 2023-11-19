@@ -31,7 +31,7 @@ typedef struct t_entree t_entree;
 /*
 Fonction: T_ENTREE_INIT
 Description: Crée une nouvelle entrée de circuit. Le constrcuteur reçoit un 
-			 identifiant numérique qui (on assume) est unique dans le circuit.
+			 identifiant numérique qui (on assume) est unique dans le circuit.      //si le id est le mm, demander de reessayer
 
 			 À partir de cet identifiant, la fonction construit le nom de l'entrée. 
 			 Ex.: E1 est le nom de l'entrée ayant pour identifiant 1.
