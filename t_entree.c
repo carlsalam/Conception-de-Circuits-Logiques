@@ -24,7 +24,7 @@ t_entree *t_entree_init(int num)
 
 
     //Réservation de mémoire pour le nom et verifier si malloc fonctionne
-    nouvelle_entree->nom = (char *) malloc(sizeof(char) * strlen(entree) + 1);
+    nouvelle_entree->nom = (char *) malloc(sizeof(char) * strlen(entree) + 1);      //NOM_ENTREE_TAILLE_MAX
     if(nouvelle_entree->nom == NULL)
     {
         free(nouvelle_entree);
