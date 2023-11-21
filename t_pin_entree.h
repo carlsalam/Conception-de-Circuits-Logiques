@@ -84,7 +84,7 @@ Paramètres:
 - pin_sortie: La pin sortie à laquelle la pin entrée sera reliée.
 Retour: Aucun
 */
-void t_pin_entree_relier(t_pin_entree *pin_entree, const t_pin_sortie *pin_sortie);
+void t_pin_entree_relier(t_pin_entree *pin_entree, t_pin_sortie *pin_sortie);
 
 
 /*

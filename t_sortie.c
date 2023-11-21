@@ -36,3 +36,86 @@ t_sortie *t_sortie_init(int num)
     return nouvelle_sortie;
 
 }
+
+
+void t_sortie_destroy(t_sortie *sortie)
+{
+    //Verifier si le pointeur sortie n'est pas null
+    if(sortie != NULL)
+    {
+        //Liberer la mémoire pour le nom
+        free( sortie -> nom);
+
+        //Verifier si sortie->pin n'est pas NULL
+        if(sortie -> pin != NULL)
+        {
+            //Liberer la memoire allouée à în
+            t_pin_entree_destroy( sortie -> pin);
+        }
+        //Liberer la memoire a t_sortie
+        free(sortie);
+    }
+}
+
+
+t_pin_entree *t_sortie_get_pin(t_sortie *sortie)
+{
+    if(sortie == NULL)
+    {
+        return NULL;
+    }
+
+    return sortie -> pin;
+}
+
+
+int t_sortie_relier(t_sortie *dest, t_pin_sortie *source)
+{
+    if(dest == NULL || source == NULL)
+    {
+        return 0;
+    }
+
+    t_pin_entree_relier(dest -> pin, source);
+    return 1;
+}
+
+int t_sortie_est_reliee(t_sortie *sortie)
+{
+    if(sortie == NULL || sortie -> pin == NULL)
+    {
+        return 0;
+    }
+
+    return t_pin_entree_est_reliee(sortie -> pin);
+}
+
+
+void t_sortie_reset(t_sortie *sortie)
+{
+    if(sortie == NULL)
+    {
+        return;
+    }
+
+    if(sortie -> pin != NULL)
+    {
+        t_pin_entree_reset(sortie -> pin);
+    }
+}
+
+int t_sortie_get_valeur(t_sortie *sortie)
+{
+    if(sortie == NULL || sortie -> pin == NULL)
+    {
+        return -1;
+    }
+
+    return t_pin_sortie_get_valeur(sortie -> pin);
+}
+
+
+
+
+
+
