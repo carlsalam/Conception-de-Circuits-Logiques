@@ -54,7 +54,7 @@ Paramètres: Aucun
 Retour: Pointeur vers le circuit créé
 Paramètres modifié: Aucun.
 */
-t_circuit* t_circuit_init(void);
+t_circuit*  t_circuit_init(void);
 
 /*
 Fonction: T_CIRCUIT_DESTROY
