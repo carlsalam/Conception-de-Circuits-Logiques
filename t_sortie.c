@@ -5,7 +5,7 @@
 t_sortie *t_sortie_init(int num)
 {
     //Initialisation du pointeur
-    t_sortie* nouvelle_sortie = NULL;
+    t_sortie* nouvelle_sortie;
 
     //Reservation de memoire pour une nouvelle sortie et verifier si l'allocation a fonctionner
     nouvelle_sortie = (t_sortie*) malloc(sizeof(t_sortie));
@@ -17,21 +17,18 @@ t_sortie *t_sortie_init(int num)
     //Initialisation de l'ID
     nouvelle_sortie->id = num;
 
-    char sortie[10]; //Initialisation d'une chaine de caractère où l'on va stocker le nom.
-    sprintf(sortie, "S%d", num); //Formatage
-
     //Réservation de mémoire pour le nom et verifier si malloc fonctionne
-    nouvelle_sortie->nom = (char *) malloc(strlen(sortie) + 1);
+    nouvelle_sortie->nom = (char *) malloc(sizeof(char) * NOM_SORTIE_TAILLE_MAX +1);
     if(nouvelle_sortie->nom == NULL)
     {
         free(nouvelle_sortie);
         return NULL;
     }
-    //Copier le nom dans nouvelle entrée
-    strcpy(nouvelle_sortie->nom, sortie);
 
-    //Initialisation du pin de sortie à NULL
-    nouvelle_sortie->pin = NULL;
+    sprintf(nouvelle_sortie->nom, "S%d", num); //Formatage
+
+    //mettre l'adresse dans le champs pin de l'enregistrement nouvelle_sortie
+    nouvelle_sortie->pin = t_pin_entree_init();
 
     return nouvelle_sortie;
 
