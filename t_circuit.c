@@ -113,7 +113,7 @@ t_porte* t_circuit_ajouter_porte(t_circuit *circuit, e_types_portes le_type)
     circuit -> nb_portes++;
 
     return nouvelle_porte;
-}
+} //A VERFIFER
 
 
 
