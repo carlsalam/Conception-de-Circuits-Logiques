@@ -27,11 +27,7 @@ t_sortie *t_sortie_init(int num)
 
     sprintf(nouvelle_sortie->nom, "S%d", num); //Formatage
 
-
-    //Copier le nom dans nouvelle entrée
-   // strcpy(nouvelle_sortie->nom, sortie);
-
-    //Initialisation du pin de sortie à NULL
+    //mettre l'adresse dans le champs pin de l'enregistrement nouvelle_sortie
     nouvelle_sortie->pin = t_pin_entree_init();
 
     return nouvelle_sortie;
