@@ -15,7 +15,7 @@ t_porte *t_porte_init(int id, e_types_portes type)
     nouvelle_porte -> id = id;
 
     char nom_porte[NOM_PORTE_TAILLE_MAX];
-    snprintf(nom_porte, NOM_PORTE_TAILLE_MAX, "P%d", id);
+    snprintf(nom_porte, NOM_PORTE_TAILLE_MAX, "P%d", id);// pas encore vu snprintf
     nouvelle_porte -> nom = strdup(nom_porte);
 
     nouvelle_porte -> type = type;

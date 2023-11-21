@@ -6,7 +6,7 @@ t_entree *t_entree_init(int num)
 {
 
     //Initialisation du pointeur vers NULL
-    t_entree* nouvelle_entree = NULL;
+    t_entree* nouvelle_entree;
 
     //Réservation de mémoire pour la nouvelle entrée et verifier si malloc fonctionne
     nouvelle_entree = (t_entree*) malloc(sizeof(t_entree));
@@ -19,22 +19,25 @@ t_entree *t_entree_init(int num)
     nouvelle_entree->id = num;
 
 
-    char entree[3]; //Initialisation d'une chaine de caractère où l'on va stocker le nom.
-    sprintf(entree, "E%d", num); //Formatage
-
-
     //Réservation de mémoire pour le nom et verifier si malloc fonctionne
-    nouvelle_entree->nom = (char *) malloc(sizeof(char) * strlen(entree) + 1);      //NOM_ENTREE_TAILLE_MAX
+    nouvelle_entree->nom = (char *) malloc(sizeof(char) * NOM_ENTREE_TAILLE_MAX + 1); // +  1 pour le zero binaire '\0' s'il n'est pas inclut dans le define
     if(nouvelle_entree->nom == NULL)
     {
         free(nouvelle_entree);
         return NULL;
     }
-    //Copier le nom dans nouvelle entrée
-    strcpy(nouvelle_entree->nom, entree);
 
-    //Initialisation du pin de sortie à NULL
-    nouvelle_entree->pin = NULL;
+   // char entree[3]; //Initialisation d'une chaine de caractère où l'on va stocker le nom.
+    sprintf(nouvelle_entree->nom, "E%d", num); //Formatage
+
+
+/*    //Copier le nom dans nouvelle entrée
+    strcpy(nouvelle_entree->nom, entree);*/
+
+    nouvelle_entree -> pin = t_pin_sortie_init();
+
+    /*//Initialisation du pin de sortie à NULL
+    nouvelle_entree->pin = NULL;*/
 
     return nouvelle_entree;
 
