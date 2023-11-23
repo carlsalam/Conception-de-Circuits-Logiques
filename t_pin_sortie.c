@@ -109,8 +109,13 @@ void t_pin_sortie_serialiser_liens(t_pin_sortie * pin, t_circuit * circuit, char
     //Réinitialiser la chaine de résultat
     strcpy(resultat, "");  //PAS SURE DE CETTE ÉTAPE
 
+
+    //Chaque liaison pin_sortie
     for(int i = 0; i < pin -> nb_liaisons; i++)
 {
+        //Composant lié
+        t_pin_entree  *pin_entree_liee = pin -> liaisons[i];
+        //
 }
 
 
