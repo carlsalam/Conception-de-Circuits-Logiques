@@ -99,6 +99,22 @@ void t_pin_sortie_reset(t_pin_sortie * pin)
 
 void t_pin_sortie_serialiser_liens(t_pin_sortie * pin, t_circuit * circuit, char* resultat)
 {
+
+    //Si les pointeurs retournent NULL
+    if( pin == NULL || circuit == NULL || resultat == NULL)
+    {
+        return;
+    }
+
+    //Réinitialiser la chaine de résultat
+    strcpy(resultat, "");  //PAS SURE DE CETTE ÉTAPE
+
+    for(int i = 0; i < pin -> nb_liaisons; i++)
+{
+}
+
+
+
 	//int i, j, k ; //Compteurs de boucle
 	//const int nb_portes = circuit->nb_portes; //Le nombre de portes du circuit
 	//const int nb_sorties = circuit->nb_sorties; //Le nombre de sorties du circuit
