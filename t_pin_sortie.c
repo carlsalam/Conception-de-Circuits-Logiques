@@ -107,7 +107,11 @@ void t_pin_sortie_serialiser_liens(t_pin_sortie * pin, t_circuit * circuit, char
     }
 
     //Réinitialiser la chaine de résultat
-         resultat[0]='\0';
+
+        free(resultat);
+        resultat=(char*) malloc(sizeof(char));
+         *resultat='\0';
+
 
 
     //Chaque liaison pin_sortie
