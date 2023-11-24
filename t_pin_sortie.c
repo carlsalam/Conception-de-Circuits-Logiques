@@ -107,7 +107,7 @@ void t_pin_sortie_serialiser_liens(t_pin_sortie * pin, t_circuit * circuit, char
     }
 
     //Réinitialiser la chaine de résultat
-    strcpy(resultat, "");  //PAS SURE DE CETTE ÉTAPE
+         resultat[0]='\0';
 
 
     //Chaque liaison pin_sortie
