@@ -15,36 +15,53 @@ t_porte *t_porte_init(int id, e_types_portes type)
     nouvelle_porte -> id = id;
 
     char nom_porte[NOM_PORTE_TAILLE_MAX];
-    snprintf(nom_porte, NOM_PORTE_TAILLE_MAX, "P%d", id);// pas encore vu snprintf
-    nouvelle_porte -> nom = strdup(nom_porte);
+    snprintf(nom_porte, NOM_PORTE_TAILLE_MAX, "P%d", id);// sprintf mais avec la taille
+
+//    nouvelle_porte -> nom = strdup(nom_porte);            g remplacer ca par:
+
+    nouvelle_porte->nom = (char*)malloc(strlen(nom_porte) + 1); //+1 pour le caractere nul en fin de chaine
+    if (nouvelle_porte->nom == NULL)        //if au cas ou l'initialisation de la porte echoue
+    {
+        for (int i = 0; i < nouvelle_porte -> nb_entrees; i++)
+        {
+            t_pin_entree_destroy(nouvelle_porte -> entrees[i]);
+        }
+        free(nouvelle_porte);
+        return NULL;
+    }
+    strcpy(nouvelle_porte -> nom, nom_porte);     //copier le tableau nom_porte dans nouvelle_porte -> nom
+
 
     nouvelle_porte -> type = type;
 
 
-    int nb_entrees;
+//    int nb_entrees; //???
 
     //Initislidstion des pins d'entrée en fonction du type de porte
     switch (type) {
+            //la porte NOT est la seule qui a une entree
         case PORTE_NOT:
             nouvelle_porte -> nb_entrees = 1;
             break;
         case PORTE_ET:
         case PORTE_OU:
         case PORTE_XOR:
-            // Assumption: Ces types de portes nécessitent 2 entrées, ajustez selon vos besoins
+            // Les portes OU, ET et XOR on 2 entrees
             nouvelle_porte -> nb_entrees = 2;
             break;
         default:
-            // Gérer d'autres types de portes ou retourner une erreur si le type est inconnu
+            // Autres type de portes ou retourner erreur si type inconnu
             free(nouvelle_porte -> nom);
             free(nouvelle_porte);
             return NULL;
     }
 
-    for(int i = 0; i <nb_entrees; i++)
+    //parcour le nombre d'entree de chaque type de portes
+    for(int i = 0; i <nouvelle_porte -> nb_entrees; i++)
     {
-        nouvelle_porte -> entrees[i] = t_pin_entree_init();
-        if(nouvelle_porte -> entrees[i] == NULL)
+        nouvelle_porte -> entrees[i] = t_pin_entree_init();     //allocation et init du pin d'entree
+
+        if(nouvelle_porte -> entrees[i] == NULL)        //if au cas ou l'initialisation echoue
         {
             free(nouvelle_porte -> nom);
             for (int j = 0; j < i; j++)
@@ -58,7 +75,7 @@ t_porte *t_porte_init(int id, e_types_portes type)
 
     //Initialisation pin sortie
     nouvelle_porte -> sortie = t_pin_sortie_init();
-    if(nouvelle_porte -> nom == NULL)
+    if(nouvelle_porte -> nom == NULL)           //if au cas ou l'initialisation echoue : free chaque nom de porte et les pin de sortie
     {
         free(nouvelle_porte -> nom);
         for(int i = 0; i < (nouvelle_porte -> nb_entrees); i++)
@@ -68,18 +85,19 @@ t_porte *t_porte_init(int id, e_types_portes type)
         free(nouvelle_porte);
         return NULL;
     }
-        return nouvelle_porte;
+
+    return nouvelle_porte;
 }
 
 
 void t_porte_destroy(t_porte *porte)
 {
-    if(porte != NULL)
+    if(porte != NULL)   //if pour ne pas liberer de la memoire qui n'a pas ete initialisee
     {
         free(porte -> nom);
 
         //Liberer chaque pin entree assoiee a la porte
-        for(int i =0; i < (porte -> nb_entrees); i++)
+        for(int i = 0; i < porte -> nb_entrees; i++)
         {
             if(porte -> entrees[i] != NULL)
             {
@@ -103,10 +121,10 @@ void t_porte_calculer_sorties(t_porte *porte)
     //Si porte = NULL ou si pin = non definie rien a faire
     if(porte == NULL || porte -> sortie == NULL)
     {
-        return;
+        return;     //termine la fonction sans faire les calculs si la porte ou la sortie n'est pas definie
     }
 
-    int res = 0; //jsp
+    int res = 0; // Variable de résultat pour stocker le resultat du calcul logique
 
     switch (porte->type) {
         case PORTE_ET:
@@ -116,7 +134,7 @@ void t_porte_calculer_sorties(t_porte *porte)
             res = t_pin_sortie_get_valeur(porte->entrees[0]) | t_pin_sortie_get_valeur(porte->entrees[1]);
             break;
         case PORTE_NOT:
-            res = !t_pin_sortie_get_valeur(porte->entrees[0]);
+            res = !t_pin_sortie_get_valeur(porte->entrees[0]);  // seule porte avec 1 pin d'entree
             break;
         case PORTE_XOR:
             res = t_pin_sortie_get_valeur(porte->entrees[0]) ^ t_pin_sortie_get_valeur(porte->entrees[1]);
@@ -125,40 +143,40 @@ void t_porte_calculer_sorties(t_porte *porte)
             return;
     }
 
-    //Définir valeur pin sortie
+    //Définir valeur pin sortie apres l'obtention du resultat du calcul
     t_pin_sortie_set_valeur(porte -> sortie, res);
 }
 
 int t_porte_relier(t_porte *dest, int num_entree, t_pin_sortie *source)
 {
-    //Validité pointeur dest et source
+    //verifie si la porte destination et le pointeur source sont bien definie
     if(dest == NULL || source == NULL)
     {
         return 0;
     }
 
-    //indice valide?
+    //indice d'entree valide?
     if(num_entree < 0 || num_entree >= MAX_ENTREES || num_entree >= (dest -> nb_entrees))
     {
         return 0; //Faux si indice = non valide
     }
 
-    //Relier pin_entree a pin_sortie de la source
-    t_pin_entree_relier(dest -> entrees[num_entree], source);
+    //Relier l'entree de la porte a pin_sortie de la source
+    t_pin_entree_relier(dest->entrees[num_entree], source);
 
-    //Retourne 1 quand la la liaison est faite avec succès
+    //Retourne 1 quand la liaison est faite avec succès
     return 1;
 }
 
 int t_porte_est_reliee(t_porte *porte)
 {
-    //Si la porte est null retourner 0
+    //if si la porte n'est initialisee
     if(porte == NULL)
     {
         return 0;
     }
 
-    //Si pin de sortie n'est pas reliée retourner 0
+    //Si pin de sortie n'est pas reliée (n'est pas vrai) retourner 0
     if(!t_pin_sortie_est_reliee(porte -> sortie))
     {
         return 0;
@@ -169,11 +187,16 @@ int t_porte_est_reliee(t_porte *porte)
     {
         if(!t_pin_entree_est_reliee(porte -> entrees[i]))
         {
-            return 0;
+            return 0;       //if pour si une pin d'entree n'est pas relier
         }
     }
 
-    //Vrai aussi-no
+    if (!t_pin_sortie_est_reliee(porte->sortie))
+    {
+        return 0;       //if pour si la pin de sortie n'est pas relier
+    }
+
+    //sinon, la porte est relier (vrai)
     return 1;
 }
 
@@ -209,7 +232,7 @@ int t_porte_propager_signal(t_porte *porte)
         return 0;
     }
 
-    //toutes les pins d'entrée ont reçu un signal
+    // Verifier si toutes les pins d'entrée ont reçu un signal
     for (int i = 0; i < porte -> nb_entrees; i++)
     {
         // Si une des entrées n'a pas reçu de signal

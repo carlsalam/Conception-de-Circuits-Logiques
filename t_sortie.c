@@ -113,6 +113,3 @@ int t_sortie_get_valeur(t_sortie *sortie)
 
 
 
-
-
-
