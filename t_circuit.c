@@ -3,7 +3,7 @@
 t_circuit* t_circuit_init(void)
 {
     //Allouer de la memoire pour nouveau circuit
-    t_circuit *nouveau_circuit;
+    t_circuit* nouveau_circuit;
     nouveau_circuit = (t_circuit*)malloc(sizeof(t_circuit));
 
     //Si l'allocation de mémoire echoue
@@ -45,7 +45,7 @@ void t_circuit_destroy(t_circuit *circuit)
     }
 
     // Libérer les entrées
-    for (int i = 0; i < circuit -> nb_entrees; i++)
+    for (int i = 0; i < MAX_ENTREES; i++)
     {
         if (circuit->entrees[i] != NULL)
         {
@@ -54,7 +54,7 @@ void t_circuit_destroy(t_circuit *circuit)
     }
 
     // Libérer sorties
-    for (int i = 0; i < circuit -> nb_sorties; i++)
+    for (int i = 0; i < MAX_SORTIES; i++)
     {
         if (circuit -> sorties[i] != NULL)
         {
@@ -63,7 +63,7 @@ void t_circuit_destroy(t_circuit *circuit)
     }
 
     // Libérer les portes
-    for (int i = 0; i < circuit -> nb_portes; i++)
+    for (int i = 0; i < CIRCUIT_MAX_PORTES; i++)
     {
         if (circuit -> portes[i] != NULL)
         {
@@ -91,8 +91,10 @@ t_porte* t_circuit_ajouter_porte(t_circuit *circuit, e_types_portes le_type)
         return NULL;
     }
 
-    int id_seul = 0;
-    for(int i = 0; i < (circuit -> nb_portes); i++)
+    //creer des nouveaux id
+    int id_seul = 0;    //stocker le plus grand id de porte du circuit
+
+    for(int i = 0; i < circuit -> nb_portes; i++)     //for qui parcour le id des porte et trouve le plus grand
     {
         if(circuit -> portes[i] != NULL && circuit -> portes[i] -> id > id_seul)
         {
@@ -100,16 +102,15 @@ t_porte* t_circuit_ajouter_porte(t_circuit *circuit, e_types_portes le_type)
         }
     }
 
-    id_seul++;
+    id_seul++;  //incremente pour obtenir un id unique
 
-    t_porte *nouvelle_porte;
-    nouvelle_porte = t_porte_init(id_seul, le_type);
+    t_porte* nouvelle_porte = t_porte_init(id_seul, le_type);   //creation d'une nouvelle porte avec le nouveau id
     if(nouvelle_porte == NULL)
     {
         return  NULL;
     }
 
-    circuit -> portes[circuit -> nb_portes] = nouvelle_porte;
+    circuit -> portes[circuit -> nb_portes] = nouvelle_porte;       //ajouter la nouvelle porte au circuit
     circuit -> nb_portes++;
 
     return nouvelle_porte;
@@ -117,11 +118,170 @@ t_porte* t_circuit_ajouter_porte(t_circuit *circuit, e_types_portes le_type)
 
 
 
+t_entree* t_circuit_ajouter_entree(t_circuit * circuit)
+{
+    //  Verifier si le circuit est NULL
+    if(circuit == NULL)
+    {
+        return NULL;
+    }
+
+    //  s'assurer qu'on ne dépasse pas le nombre d'entrées permis
+    if(circuit -> nb_entrees >= MAX_ENTREES)
+    {
+        return NULL;
+    }
+
+    //creation des nouveaux id
+
+    int id_seul = 0;    //stocker le plus grand id de porte du circuit
+
+    for (int i = 0; i < circuit -> nb_entrees; ++i)
+    {
+        if(circuit -> entrees[i] != NULL && circuit -> entrees[i] > id_seul)
+        {
+            id_seul = circuit -> entrees[i] -> id;
+        }
+    }
+    //incr pour avoir un id unique
+    id_seul++;
+
+    //utiliser ce id dans la nouvelle entree
+    t_entree* nouvelle_entree = t_entree_init(id_seul);
+    if(nouvelle_entree == NULL)
+    {
+        return NULL;
+    }
+
+    //ajouter cette nouvelle entree dans le circuit
+    circuit -> entrees[circuit -> nb_entrees] = nouvelle_entree;
+    //actualiser le nombre d'entree dans le circuit
+    circuit -> nb_entrees++;
+
+    return nouvelle_entree;
+}
 
 
-t_entree* t_circuit_ajouter_entree(t_circuit * circuit);
-t_sortie* t_circuit_ajouter_sortie(t_circuit * circuit);
-int t_circuit_est_valide(t_circuit *circuit);
-int t_circuit_appliquer_signal(t_circuit * circuit, int signal[], int nb_bits);
+t_sortie* t_circuit_ajouter_sortie(t_circuit * circuit)
+{
+    //  Verifier si le circuit est NULL
+    if(circuit == NULL)
+    {
+        return NULL;
+    }
+
+    //  s'assurer qu'on ne dépasse pas le nombre de sorties permis
+    if(circuit -> nb_sorties >= MAX_SORTIES)
+    {
+        return NULL;
+    }
+
+    //creation des nouveaux id
+
+    int id_seul = 0;    //stocker le plus grand id de porte du circuit
+
+    for (int i = 0; i < circuit -> nb_sorties; ++i)
+    {
+        if(circuit -> sorties[i] != NULL && circuit -> sorties[i] > id_seul)
+        {
+            id_seul = circuit -> sorties[i] -> id;
+        }
+    }
+    //incr pour avoir un id unique
+    id_seul++;
+
+    //utiliser ce id dans la nouvelle sortie
+    t_sortie* nouvelle_sortie = t_sortie_init(id_seul);
+    if(nouvelle_sortie == NULL)
+    {
+        return NULL;
+    }
+
+    //ajouter cette nouvelle sortie dans le circuit
+    circuit -> sorties[circuit -> nb_sorties] = nouvelle_sortie;
+    //actualiser le nombre de sortie dans le circuit
+    circuit -> nb_sorties++;
+
+    return nouvelle_sortie;
+}
+
+/*Description: Vérifie si un circuit donné est un circuit valide. Pour qu'un circuit soit valide
+			 toutes les entrées, portes et sorties du circuit doivent être reliées.
+NDE: Vous utiliserez les fonctions t_entree_est_reliee, t_sortie_est_reliee et t_porte_est_reliee. */
+
+int t_circuit_est_valide(t_circuit *circuit)
+{
+    //  Verifier si le circuit est NULL
+    if(circuit == NULL)
+    {
+        return NULL;
+    }
+
+    //  Verifier si les entrees sont relier
+    for (int i = 0; i < circuit -> nb_entrees; ++i)
+    {
+        if(!t_entree_est_reliee(circuit ->entrees[i]))
+        {
+            return 0;       //la fonction t_entree_est_reliee va renvoyer faux si la porte n'est pas completement relier
+        }
+    }
+
+    //  Verifier si les sorties sont relier
+    for (int i = 0; i < circuit -> nb_sorties; ++i)
+    {
+        if(!t_sortie_est_reliee(circuit -> sorties[i]))
+        {
+            return 0;       //la fonction t_sortie_est_reliee va renvoyer faux si la porte n'est pas completement relier
+        }
+    }
+
+    //  Verifier si les portes sont relier
+    for (int i = 0; i < circuit -> nb_portes; ++i)
+    {
+        if(!t_porte_est_reliee(circuit ->portes[i]))
+        {
+            return 0;       //la fonction t_entree_est_reliee va renvoyer faux si la porte n'est pas completement relier
+        }
+    }
+
+    // si on entre dans aucun des if, alors le circuit est valide
+    return 1;
+}
+
+int t_circuit_appliquer_signal(t_circuit * circuit, int signal[], int nb_bits)
+{
+
+    /*int t_circuit_appliquer_signal(t_circuit *circuit, int signal[], int nb_bits) {
+    // Vérifier si le circuit est NULL ou si le signal est NULL
+    if (circuit == NULL || signal == NULL) {
+        return 0; // Impossible d'appliquer le signal
+    }
+
+    // Vérifier si le nombre de bits du signal est suffisant pour alimenter tout le circuit
+    if (nb_bits < circuit->nb_entrees) {
+        return 0; // Nombre de bits insuffisant
+    }
+
+    // Appliquer le signal aux entrées du circuit
+    for (int i = 0; i < circuit->nb_entrees; i++) {
+        // Vérifier si l'entrée existe et a une pin de sortie
+        if (circuit->entrees[i] != NULL && circuit->entrees[i]->pin != NULL) {
+            // Appliquer le bit à la pin de sortie de l'entrée
+            circuit->entrees[i]->pin->valeur = signal[i];
+        } else {
+            return 0; // Échec si l'entrée ou la pin de sortie n'existe pas
+        }
+    }
+
+    return 1; // Signal appliqué avec succès
+}
+*/
+
+    pas verifier;
+
+}
+
+
+
 void t_circuit_reset(t_circuit *circuit);
 int t_circuit_propager_signal(t_circuit *circuit);
