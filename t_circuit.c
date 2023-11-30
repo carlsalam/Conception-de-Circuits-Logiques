@@ -214,7 +214,7 @@ int t_circuit_est_valide(t_circuit *circuit)
     //  Verifier si le circuit est NULL
     if(circuit == NULL)
     {
-        return NULL;
+        return 0;
     }
 
     //  Verifier si les entrees sont relier
@@ -248,40 +248,69 @@ int t_circuit_est_valide(t_circuit *circuit)
     return 1;
 }
 
+/*NDE:
+- Vous devez vous assurer que le nombre de bits du signal est suffisant pour alimenter tout le circuit.
+  (donc le nombre est au moins égal au nombre d'entrées du circuit)
+- Pour appliquer un bit à un entrée, il faut changer la valeur de la pin de sortie de l'entree (champs
+  pin dans t_entree).*/
+
 int t_circuit_appliquer_signal(t_circuit * circuit, int signal[], int nb_bits)
 {
-
-    /*int t_circuit_appliquer_signal(t_circuit *circuit, int signal[], int nb_bits) {
-    // Vérifier si le circuit est NULL ou si le signal est NULL
-    if (circuit == NULL || signal == NULL) {
-        return 0; // Impossible d'appliquer le signal
+    if (circuit == NULL || signal == NULL)
+    {
+        return 0; // if si le circuit n'est pas initier / si le signal est NULL
     }
 
-    // Vérifier si le nombre de bits du signal est suffisant pour alimenter tout le circuit
-    if (nb_bits < circuit->nb_entrees) {
-        return 0; // Nombre de bits insuffisant
+    if (nb_bits < circuit->nb_entrees)
+    {
+        return 0; // if pour verifier si le nombre de bits est insuffisant pour alimenter tout le circuit ( < nb_entree)
     }
 
-    // Appliquer le signal aux entrées du circuit
-    for (int i = 0; i < circuit->nb_entrees; i++) {
-        // Vérifier si l'entrée existe et a une pin de sortie
-        if (circuit->entrees[i] != NULL && circuit->entrees[i]->pin != NULL) {
+    // si on rentre pas des les if, parcourir toutes les entree et appliquer le signal aux entree du circuit
+    for (int i = 0; i < circuit->nb_entrees; i++)
+    {
+        // rentrer dans le if qui applique le signal au entree si l'entre existe et sa pin de sortie existe
+        if (circuit->entrees[i] != NULL && circuit->entrees[i]->pin != NULL)
+        {
             // Appliquer le bit à la pin de sortie de l'entrée
             circuit->entrees[i]->pin->valeur = signal[i];
-        } else {
+        } else
+        {
             return 0; // Échec si l'entrée ou la pin de sortie n'existe pas
         }
     }
 
-    return 1; // Signal appliqué avec succès
-}
-*/
-
-    pas verifier;
-
+    return 1; // si on a pas retourner 0, alors le signal a bien ete appliquer, return 1
 }
 
+void t_circuit_reset(t_circuit *circuit)
+{
+    if(circuit == NULL)
+    {
+        return; //verifier si le circuit n'est pas NULL
+    }
+    // parcourir toutes les entree, sortie et porte pour reinitialiser le systeme au complet
+    // pour les entree
+    for (int i = 0; i < circuit -> nb_entrees; i++)
+    {
+        t_entree_reset(circuit -> entrees[i]);
+    }
+    // pour les sorties
+    for (int i = 0; i < circuit -> nb_sorties; i++)
+    {
+        t_sortie_reset(circuit -> sorties[i]);
+    }
+    // pour les portes
+    for (int i = 0; i < circuit -> nb_portes; i++)
+    {
+        t_porte_reset(circuit -> portes[i]);
+    }
+}
 
 
-void t_circuit_reset(t_circuit *circuit);
-int t_circuit_propager_signal(t_circuit *circuit);
+int t_circuit_propager_signal(t_circuit *circuit)
+{
+
+
+    
+}
