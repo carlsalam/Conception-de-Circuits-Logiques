@@ -311,6 +311,61 @@ void t_circuit_reset(t_circuit *circuit)
 int t_circuit_propager_signal(t_circuit *circuit)
 {
 
+    int nb_portes = circuit -> nb_portes;
 
-    
+
+
+    if (circuit == NULL || !t_circuit_est_valide(circuit))
+    {
+        return 0; // Retourner faux si le circuit est invalide
+    }
+
+    // Appliquer le signal aux entrées du circuit
+    for (int i = 0; i < circuit->nb_entrees; i++)
+    {
+        t_entree_propager_signal(circuit->entrees[i]);
+    }
+
+    // Initialiser la file de portes
+    t_file_porte* file = t_file_porte_initialiser(CIRCUIT_MAX_PORTES);
+
+    // Ajouter toutes les portes du circuit à la file
+    for (int i = 0; i < circuit->nb_portes; i++)
+    {
+        t_file_porte_enfiler(file, circuit->portes[i]);
+    }
+
+    int nb_iterations = 0;
+
+    while (!t_file_porte_est_vide(file) && nb_iterations < nb_portes * (nb_portes + 1) /2)
+    {
+        // Défiler une porte de la file
+        t_porte *porte_courante = t_file_porte_defiler(file);
+
+        // Propager le signal de la porte
+        if (!t_porte_propager_signal(porte_courante))
+        {
+            // Si la porte n'a pas réussi à propager son signal, la remettre dans la file
+            t_file_porte_enfiler(file, porte_courante);
+        }
+
+        nb_iterations++;
+    }
+
+    // Libérer la mémoire occupée par la file
+    // (les pointeurs des portes ont été retirés de la file mais pas les portes elles-mêmes)
+    free(file);
+
+    ////pas sur du free
+
+    // Si la file n'est pas vide, cela signifie qu'il y a une boucle dans le circuit
+    if (!t_file_porte_est_vide(file))
+    {
+        return 0;
+    }
+
+    return 1; // Si on rentre dans aucuns des return 0, le signale s'est bien propagee
 }
+
+
+
