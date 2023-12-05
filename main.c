@@ -1,3 +1,4 @@
+/*
 #include "t_circuit.h"
 #include "t_entree.h"
 #include "t_file_porte.h"
@@ -51,11 +52,14 @@ int main(void) {
     t_sortie_relier(sortie0, t_porte_get_pin_sortie(porte_xor));
 
 //Vérification de la validité du circuit
-    if (t_circuit_est_valide(circuit)) {
+    if (t_circuit_est_valide(circuit))
+    {
         printf("Circuit valide!\n");
-    } else {
+    } else
+    {
         printf("Circuit invalide!\n");
     }
+
 //On définit un signal de 3 bits (111)
     signal[0] = 1;
     signal[1] = 1;
@@ -72,4 +76,4 @@ int main(void) {
     }
     t_circuit_destroy(circuit);
     system("pause");
-}
+}*/

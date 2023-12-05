@@ -37,19 +37,19 @@ t_sortie *t_sortie_init(int num)
 
 void t_sortie_destroy(t_sortie *sortie)
 {
-    //Verifier si le pointeur sortie n'est pas null
+    // verifier si sortie n'est pas null
     if(sortie != NULL)
     {
-        //Liberer la mémoire pour le nom
+        // liberer la mémoire pour le nom
         free( sortie -> nom);
 
-        //Verifier si sortie->pin n'est pas NULL
+        // if si sortie->pin est pas NULL
         if(sortie -> pin != NULL)
         {
             //Liberer la memoire allouée à în
             t_pin_entree_destroy( sortie -> pin);
         }
-        //Liberer la memoire a t_sortie
+        //Liberer la memoire de l'enregistrement
         free(sortie);
     }
 }

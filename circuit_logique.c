@@ -60,7 +60,8 @@ int main(void)
 	t_sortie_relier(sortie0, t_porte_get_pin_sortie(porte_xor));
 
 	//Vérification de la validité du circuit
-	if (t_circuit_est_valide(circuit)) {
+	if (t_circuit_est_valide(circuit))
+    {
 		printf("Circuit valide!\n");
 
 		signal[0] = 1;
@@ -70,15 +71,18 @@ int main(void)
 		t_circuit_reset(circuit);
 		t_circuit_appliquer_signal(circuit, signal, 3);
 
-		if (t_circuit_propager_signal(circuit)) {
+		if (t_circuit_propager_signal(circuit))
+        {
 			printf("Signal propage avec succes.\n");
 			printf("Sortie 0: %d\n", t_sortie_get_valeur(sortie0));
 		}
-		else {
+		else
+        {
 			printf("Erreur lors de la propagation du signal.\n");
 		}
 	}
-	else {
+	else
+    {
 		printf("Circuit invalide!\n");
 	}
 

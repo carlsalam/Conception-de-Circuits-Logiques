@@ -126,7 +126,7 @@ t_entree* t_circuit_ajouter_entree(t_circuit * circuit)
         return NULL;
     }
 
-    //  s'assurer qu'on ne dépasse pas le nombre d'entrées permis
+    //  s'assurer qu'on ne dépasse pas le nombre d'entrées permis (define)
     if(circuit -> nb_entrees >= MAX_ENTREES)
     {
         return NULL;
@@ -287,10 +287,9 @@ void t_circuit_reset(t_circuit *circuit)
 {
     if(circuit == NULL)
     {
-        return; //verifier si le circuit n'est pas NULL
+        return; // is si le circuit est NULL
     }
-    // parcourir toutes les entree, sortie et porte pour reinitialiser le systeme au complet
-    // pour les entree
+    // parcourir toutes les entree, sortie et porte pour reinitialiser le systeme au completpour les entree
     for (int i = 0; i < circuit -> nb_entrees; i++)
     {
         t_entree_reset(circuit -> entrees[i]);
@@ -326,10 +325,10 @@ int t_circuit_propager_signal(t_circuit *circuit)
         t_entree_propager_signal(circuit->entrees[i]);
     }
 
-    // Initialiser la file de portes file
+    // initialiser la file de portes file
     t_file_porte* file = t_file_porte_initialiser(CIRCUIT_MAX_PORTES);
 
-    // Ajouter toutes les portes du circuit à la file
+    // enfiler toutes les portes
     for (int i = 0; i < circuit->nb_portes; i++)
     {
         t_file_porte_enfiler(file, circuit->portes[i]);
@@ -339,16 +338,15 @@ int t_circuit_propager_signal(t_circuit *circuit)
 
     while (!t_file_porte_est_vide(file) && iter < nb_portes * (nb_portes + 1) /2)
     {
-        // Défiler une porte de la file
+        // defiler une porte de la file
         t_porte *porte_courante = t_file_porte_defiler(file);
 
-        // Propager le signal de la porte
+        // if pour si le signal est propager
         if (!t_porte_propager_signal(porte_courante))
         {
-            // Si la porte n'a pas réussi à propager son signal, la remettre dans la file
+            // si la porte a pas propager son signal, enfiler
             t_file_porte_enfiler(file, porte_courante);
         }
-
         iter++;
     }
 
@@ -357,10 +355,9 @@ int t_circuit_propager_signal(t_circuit *circuit)
 
     ////pas sur du free
 
-    // Si la file n'est pas vide, cela signifie qu'il y a une boucle dans le circuit
     if (!t_file_porte_est_vide(file))
     {
-        return 0;
+        return 0;   // le circuit a une boucle
     }
 
     return 1; // Si on rentre dans aucuns des return 0, le signale s'est bien propagee
