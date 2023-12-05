@@ -136,9 +136,9 @@ t_entree* t_circuit_ajouter_entree(t_circuit * circuit)
 
     int id_seul = 0;    //stocker le plus grand id de porte du circuit
 
-    for (int i = 0; i < circuit -> nb_entrees; ++i)
+    for (int i = 0; i < circuit -> nb_entrees; i++)
     {
-        if(circuit -> entrees[i] != NULL && circuit -> entrees[i] > id_seul)
+        if(circuit -> entrees[i] != NULL && circuit -> entrees[i]->id > id_seul)
         {
             id_seul = circuit -> entrees[i] -> id;
         }
@@ -180,9 +180,9 @@ t_sortie* t_circuit_ajouter_sortie(t_circuit * circuit)
 
     int id_seul = 0;    //stocker le plus grand id de porte du circuit
 
-    for (int i = 0; i < circuit -> nb_sorties; ++i)
+    for (int i = 0; i < circuit -> nb_sorties; i++)
     {
-        if(circuit -> sorties[i] != NULL && circuit -> sorties[i] > id_seul)
+        if(circuit -> sorties[i] != NULL && circuit -> sorties[i]->id> id_seul)
         {
             id_seul = circuit -> sorties[i] -> id;
         }
@@ -263,20 +263,20 @@ int t_circuit_appliquer_signal(t_circuit * circuit, int signal[], int nb_bits)
 
     if (nb_bits < circuit->nb_entrees)
     {
-        return 0; // if pour verifier si le nombre de bits est insuffisant pour alimenter tout le circuit ( < nb_entree)
+        return 0; // if si le nombre de bits est insuffisant ( < nb_entree)
     }
 
-    // si on rentre pas des les if, parcourir toutes les entree et appliquer le signal aux entree du circuit
+    // si on est pas rentrer if, for qui parcour toutes les entree et appliquer le signal aux entrees
     for (int i = 0; i < circuit->nb_entrees; i++)
     {
-        // rentrer dans le if qui applique le signal au entree si l'entre existe et sa pin de sortie existe
+        // if qui applique le signal au entree si l'entre existe et sa pin de sortie existe
         if (circuit->entrees[i] != NULL && circuit->entrees[i]->pin != NULL)
         {
             // Appliquer le bit à la pin de sortie de l'entrée
             circuit->entrees[i]->pin->valeur = signal[i];
         } else
         {
-            return 0; // Échec si l'entrée ou la pin de sortie n'existe pas
+            return 0; // else si l'entre ou pin sortie existe pas
         }
     }
 
@@ -310,14 +310,14 @@ void t_circuit_reset(t_circuit *circuit)
 
 int t_circuit_propager_signal(t_circuit *circuit)
 {
-
+    //initier var locale
     int nb_portes = circuit -> nb_portes;
 
 
-
+// if pour si le circuit est invalide ou n'existe pas
     if (circuit == NULL || !t_circuit_est_valide(circuit))
     {
-        return 0; // Retourner faux si le circuit est invalide
+        return 0;
     }
 
     // Appliquer le signal aux entrées du circuit
@@ -326,7 +326,7 @@ int t_circuit_propager_signal(t_circuit *circuit)
         t_entree_propager_signal(circuit->entrees[i]);
     }
 
-    // Initialiser la file de portes
+    // Initialiser la file de portes file
     t_file_porte* file = t_file_porte_initialiser(CIRCUIT_MAX_PORTES);
 
     // Ajouter toutes les portes du circuit à la file
@@ -335,9 +335,9 @@ int t_circuit_propager_signal(t_circuit *circuit)
         t_file_porte_enfiler(file, circuit->portes[i]);
     }
 
-    int nb_iterations = 0;
+    int iter = 0;
 
-    while (!t_file_porte_est_vide(file) && nb_iterations < nb_portes * (nb_portes + 1) /2)
+    while (!t_file_porte_est_vide(file) && iter < nb_portes * (nb_portes + 1) /2)
     {
         // Défiler une porte de la file
         t_porte *porte_courante = t_file_porte_defiler(file);
@@ -349,11 +349,10 @@ int t_circuit_propager_signal(t_circuit *circuit)
             t_file_porte_enfiler(file, porte_courante);
         }
 
-        nb_iterations++;
+        iter++;
     }
 
     // Libérer la mémoire occupée par la file
-    // (les pointeurs des portes ont été retirés de la file mais pas les portes elles-mêmes)
     free(file);
 
     ////pas sur du free

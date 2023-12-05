@@ -108,7 +108,7 @@ int t_sortie_get_valeur(t_sortie *sortie)
         return -1;
     }
 
-    return t_pin_sortie_get_valeur(sortie -> pin);
+    return t_pin_entree_get_valeur(sortie -> pin);
 }
 
 

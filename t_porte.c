@@ -126,18 +126,19 @@ void t_porte_calculer_sorties(t_porte *porte)
 
     int res = 0; // Variable de résultat pour stocker le resultat du calcul logique
 
-    switch (porte->type) {
+    switch (porte->type)
+    {
         case PORTE_ET:
-            res = t_pin_sortie_get_valeur(porte->entrees[0]) & t_pin_sortie_get_valeur(porte->entrees[1]);
+            res = t_pin_entree_est_reliee(porte->entrees[0]) & t_pin_entree_get_valeur(porte->entrees[1]);
             break;
         case PORTE_OU:
-            res = t_pin_sortie_get_valeur(porte->entrees[0]) | t_pin_sortie_get_valeur(porte->entrees[1]);
+            res = t_pin_entree_est_reliee(porte->entrees[0]) | t_pin_entree_get_valeur(porte->entrees[1]);
             break;
         case PORTE_NOT:
-            res = !t_pin_sortie_get_valeur(porte->entrees[0]);  // seule porte avec 1 pin d'entree
+            res = !t_pin_entree_get_valeur(porte->entrees[0]);  // seule porte avec 1 pin d'entree
             break;
         case PORTE_XOR:
-            res = t_pin_sortie_get_valeur(porte->entrees[0]) ^ t_pin_sortie_get_valeur(porte->entrees[1]);
+            res = t_pin_entree_get_valeur(porte->entrees[0]) ^ t_pin_entree_get_valeur(porte->entrees[1]);
             break;
         default:
             return;
@@ -236,7 +237,7 @@ int t_porte_propager_signal(t_porte *porte)
     for (int i = 0; i < porte -> nb_entrees; i++)
     {
         // Si une des entrées n'a pas reçu de signal
-        if (t_pin_sortie_get_valeur(porte -> entrees[i]) == -1)
+        if (t_pin_entree_get_valeur(porte -> entrees[i]) == -1)
         {
             return 0;
         }
