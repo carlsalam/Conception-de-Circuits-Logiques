@@ -167,4 +167,6 @@ Retour: Booléen vrai si le signal s'est correctement propagé jusqu'aux sorties
 */
 int t_circuit_propager_signal(t_circuit *circuit);
 
+int** t_circuit_tdv(const t_circuit* circuit);
+
 #endif

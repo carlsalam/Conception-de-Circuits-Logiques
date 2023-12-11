@@ -364,4 +364,71 @@ int t_circuit_propager_signal(t_circuit *circuit)
 }
 
 
+// Génère la table de vérité pour un circuit spécifique.
+int** t_circuit_tdv(const t_circuit* circuit)
+{
+    // Pointeur pour stocker la table de vérité.
+    int** table;
+
+    // Calcul du nombre de lignes et de colonnes pour la table de vérité.
+    int lignes = (circuit->nb_entrees + circuit->nb_entrees - 1);
+    int colonnes = circuit->nb_entrees + circuit->nb_sorties;
+
+    // Allocation de la mémoire pour les lignes de la table.
+    table = (int**)malloc(sizeof(int*) * lignes);
+    if (table == NULL) {
+        // Retourne NULL en cas d'échec de l'allocation.
+        return NULL;
+    }
+
+    // Boucle pour allouer la mémoire pour chaque colonne de chaque ligne.
+    for (int i = 0; i < lignes; i++) {
+        table[i] = (int*)malloc(sizeof(int) * colonnes);
+        if (table[i] == NULL) {
+            // Nettoyage en cas d'allocation ratée pour une des lignes.
+            for (int j = 0; j < i; j++) {
+                free(table[j]);
+            }
+            free(table);
+            return NULL;
+        }
+    }
+
+    // Allocation d'un tableau temporaire pour stocker les signaux des entrées.
+    int* valeurs_signaux;
+    valeurs_signaux = (int*)malloc(sizeof(int) * circuit->nb_entrees);
+    int valeur_temporaire;
+
+    // Remplissage de la table avec des valeurs binaires pour chaque combinaison d'entrée.
+    for (int i = 0; i < lignes; i++) {
+        valeur_temporaire = i;
+        for (int k = circuit->nb_entrees - 1; k >= 0; k--) {
+            int bit = valeur_temporaire % 2;
+            valeurs_signaux[k] = bit;
+            valeur_temporaire /= 2;
+            // Assignation des valeurs binaires aux entrées correspondantes dans la table.
+            table[i][k] = bit;
+        }
+
+        // Applique les signaux aux entrées du circuit et propage à travers le circuit.
+        t_circuit_appliquer_signal(circuit, valeurs_signaux, circuit->nb_entrees);
+        t_circuit_propager_signal(circuit);
+
+        // Remplissage des sorties dans la table de vérité en fonction des signaux appliqués.
+        for (int a = circuit->nb_entrees; a < colonnes; a++) {
+            for (int b = 0; b < circuit->nb_sorties; b++) {
+                table[i][a] = t_sortie_get_valeur(circuit->sorties[b]);
+            }
+        }
+    }
+
+    // Libération du tableau temporaire.
+    free(valeurs_signaux);
+
+    // Retour de la table de vérité complétée.
+    return table;
+}
+
+
+
 
